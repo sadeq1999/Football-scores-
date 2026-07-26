@@ -2,870 +2,104 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0f0c29">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>⚽ منشئ التشكيلات</title>
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- Icons -->
-    <link rel="apple-touch-icon" href="icon-192.png">
-    <link rel="icon" type="image/png" href="icon-192.png">
-
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            min-height: 100vh;
-            color: white;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 15px 10px;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header h1 {
-            color: #e94560;
-            font-size: 22px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            color: #a0a0c0;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px;
-            flex-wrap: wrap;
-            background: rgba(0,0,0,0.1);
-        }
-
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: all 0.3s;
-            color: white;
-            touch-action: manipulation;
-        }
-
-        .btn-primary { background: linear-gradient(135deg, #e94560, #ff6b6b); }
-        .btn-secondary { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
-        .btn-success { background: linear-gradient(135deg, #28a745, #34d058); }
-        .btn-info { background: linear-gradient(135deg, #667eea, #764ba2); }
-
-        .btn:active { transform: scale(0.95); }
-
-        select {
-            padding: 10px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3);
-            color: white;
-            font-size: 13px;
-        }
-
-        /* Color picker */
-        .color-picker {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
-        .color-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid white;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .color-btn:active { transform: scale(1.2); }
-
-        /* Pitch */
-        .pitch-container {
-            display: flex;
-            justify-content: center;
-            padding: 10px;
-        }
-
-        .pitch {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 3/4;
-            background: linear-gradient(180deg, #2d8a6e 0%, #1e6b52 100%);
-            border: 3px solid rgba(255,255,255,0.8);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .grass-texture {
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(255,255,255,0.03) 28px, rgba(255,255,255,0.03) 29px);
-        }
-
-        /* Pitch lines */
-        .line-h { position: absolute; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.7); }
-        .line-v { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.7); }
-
-        .center-circle {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px; height: 100px;
-            border: 2px solid rgba(255,255,255,0.7);
-            border-radius: 50%;
-        }
-
-        .center-dot {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px; height: 8px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 50%;
-        }
-
-        .penalty-area-top {
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 140px; height: 70px;
-            border: 2px solid rgba(255,255,255,0.7);
-            border-top: none;
-        }
-
-        .penalty-area-bottom {
-            position: absolute;
-            bottom: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 140px; height: 70px;
-            border: 2px solid rgba(255,255,255,0.7);
-            border-bottom: none;
-        }
-
-        /* Player Card */
-        .player-card {
-            position: absolute;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            cursor: pointer;
-            z-index: 20;
-            transition: all 0.3s;
-            touch-action: none;
-        }
-
-        .player-card.dragging { opacity: 0.5; z-index: 100; }
-
-        .player-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 3px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0 auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .player-badge {
-            background: rgba(255,255,255,0.95);
-            border-radius: 14px;
-            padding: 4px 10px;
-            margin-top: -6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            min-width: 75px;
-        }
-
-        .player-name { font-size: 10px; color: #1a1a2e; font-weight: bold; }
-        .player-rating { font-size: 20px; font-weight: 900; line-height: 1; }
-        .player-position { font-size: 8px; color: #888; }
-
-        /* Side Panel */
-        .side-panel {
-            padding: 15px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .panel-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 12px;
-        }
-
-        .panel-title {
-            color: #e94560;
-            font-size: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .player-list-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .player-list-item:active { background: rgba(255,255,255,0.1); }
-
-        .list-avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .list-info { flex: 1; text-align: right; }
-        .list-name { color: white; font-size: 13px; font-weight: bold; }
-        .list-pos { color: #888; font-size: 11px; }
-        .list-rating { font-size: 18px; font-weight: bold; }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .stat-box {
-            background: rgba(0,0,0,0.2);
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-value { font-size: 22px; font-weight: bold; }
-        .stat-label { font-size: 11px; color: #888; }
-
-        /* Edit Panel */
-        .edit-panel {
-            display: none;
-            background: linear-gradient(135deg, rgba(233,69,96,0.1), rgba(102,126,234,0.1));
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid #e94560;
-            margin-bottom: 12px;
-        }
-
-        .edit-panel.active { display: block; }
-
-        .form-group { margin-bottom: 10px; }
-        .form-label { color: #888; font-size: 12px; display: block; margin-bottom: 4px; }
-
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.3);
-            color: white;
-            font-size: 14px;
-            text-align: right;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #e94560;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .btn-group .btn { flex: 1; }
-
-        /* Presets */
-        .presets {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 10px;
-        }
-
-        .preset-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-
-        .preset-btn:active { transform: scale(0.95); }
-
-        /* Install Banner */
-        .install-banner {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #e94560, #ff6b6b);
-            padding: 15px;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .install-banner.show { display: block; }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-in { animation: fadeIn 0.4s ease; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        ::-webkit-scrollbar-thumb { background: #e94560; border-radius: 3px; }
-
-        /* Responsive */
-        @media (min-width: 768px) {
-            .main-content {
-                display: flex;
-                max-width: 900px;
-                margin: 0 auto;
-                gap: 20px;
-                align-items: flex-start;
-            }
-            .pitch-container { flex: 0 0 auto; }
-            .side-panel { flex: 1; max-width: none; }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منشئ تشكيلات السباعي (7v7)</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Install Banner -->
-    <div id="installBanner" class="install-banner">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-            <span>📱 ثبت التطبيق على شاشتك الرئيسية!</span>
-            <button onclick="installPWA()" class="btn" style="background: white; color: #e94560;">تثبيت</button>
-            <button onclick="dismissBanner()" class="btn" style="background: rgba(0,0,0,0.3);">✕</button>
-        </div>
+    <!-- Header / العنوان -->
+    <div class="header-container">
+        <h1>⚽ منشئ تشكيلات السباعي (7v7)</h1>
+        <p>اسحب أصدقاءك لتغيير مراكزهم - اضغط للتعديل</p>
     </div>
 
-    <!-- Header -->
-    <div class="header">
-        <h1>⚽ منشئ التشكيلات الاحترافي</h1>
-        <p>اسحب اللاعبين لتغيير مراكزهم - اضغط للتعديل</p>
-    </div>
-
-    <!-- Controls -->
-    <div class="controls">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="color: #888; font-size: 12px;">التشكيلة:</span>
-            <select id="formationSelect" onchange="changeFormation(this.value)">
-                <option value="4-2-3-1">4-2-3-1</option>
-                <option value="4-3-3">4-3-3</option>
-                <option value="4-4-2">4-4-2</option>
-                <option value="3-5-2">3-5-2</option>
-                <option value="5-3-2">5-3-2</option>
+    <!-- Controls / أدوات التحكم -->
+    <div class="controls-bar">
+        <div>
+            <span>التشكيلة (7 لاعبين):</span>
+            <select id="formationSelect">
+                <option value="2-3-1">2-3-1 (هجومي)</option>
+                <option value="3-2-1">3-2-1 (متوازن)</option>
+                <option value="3-1-2">3-1-2 (هجومي مضاعف)</option>
+                <option value="2-2-2">2-2-2 (كلاسيكي)</option>
             </select>
         </div>
-
-        <div class="color-picker">
-            <span style="color: #888; font-size: 12px;">اللون:</span>
-            <div class="color-btn" style="background: #ffd700;" onclick="changeJerseyColor('#ffd700')"></div>
-            <div class="color-btn" style="background: #e94560;" onclick="changeJerseyColor('#e94560')"></div>
-            <div class="color-btn" style="background: #00d9ff;" onclick="changeJerseyColor('#00d9ff')"></div>
-            <div class="color-btn" style="background: #28a745;" onclick="changeJerseyColor('#28a745')"></div>
-        </div>
-
-        <button class="btn btn-info" onclick="toggleEditMode()" id="editBtn">✏️ تعديل</button>
-        <button class="btn btn-secondary" onclick="resetFormation()">🔄 إعادة</button>
+        <button id="resetLineupBtn">إعادة تعيين</button>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main Content / المحتوى الرئيسي -->
     <div class="main-content">
-        <!-- Pitch -->
+        <!-- Pitch / الملعب -->
         <div class="pitch-container">
-            <div class="pitch" id="pitch">
-                <div class="grass-texture"></div>
-
-                <!-- Lines -->
-                <div class="line-h" style="top: 50%;"></div>
-                <div class="center-circle"></div>
-                <div class="center-dot"></div>
-                <div class="penalty-area-top"></div>
-                <div class="penalty-area-bottom"></div>
-
-                <!-- Players -->
-                <div id="playersContainer"></div>
+            <div id="pitch">
+                <!-- العناصر سيتم إنشاؤها عبر JavaScript -->
             </div>
         </div>
 
-        <!-- Side Panel -->
-        <div class="side-panel">
-            <!-- Stats -->
-            <div class="panel-card animate-in">
-                <div class="panel-title">📊 إحصائيات</div>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-value" style="color: #ffd700;" id="avgRating">87.6</div>
-                        <div class="stat-label">متوسط التقييم</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" style="color: #e94560;" id="bestPlayer">91</div>
-                        <div class="stat-label">أعلى تقييم</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" style="color: #00d9ff;" id="totalPlayers">7</div>
-                        <div class="stat-label">عدد اللاعبين</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-value" style="color: #28a745;" id="defRating">87.3</div>
-                        <div class="stat-label">متوسط الدفاع</div>
-                    </div>
+        <!-- Sidebar / القائمة الجانبية -->
+        <div class="sidebar">
+            <!-- Stats / الإحصائيات -->
+            <div class="stats-box">
+                <h3>📊 إحصائيات الفريق</h3>
+                <div class="stat-item">
+                    <span id="avgRating">0</span>
+                    <span>متوسط التقييم</span>
                 </div>
             </div>
 
-            <!-- Player List -->
-            <div class="panel-card animate-in">
-                <div class="panel-title">👥 اللاعبون</div>
-                <div id="playerList"></div>
-            </div>
+            <!-- Edit Player / تعديل بيانات الصديق -->
+            <div class="edit-box">
+                <h3>✏️ تعديل بيانات الصديق</h3>
+                <div id="editArea">
+                    <label>اسم الصديق:</label>
+                    <input type="text" id="playerNameInput" placeholder="مثلاً: علي عبيد">
 
-            <!-- Edit Panel -->
-            <div id="editPanel" class="edit-panel">
-                <div class="panel-title">✏️ تعديل اللاعب</div>
-                <div class="form-group">
-                    <label class="form-label">الاسم</label>
-                    <input type="text" id="editName" class="form-input" placeholder="اسم اللاعب">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">التقييم (1-99)</label>
-                    <input type="number" id="editRating" class="form-input" min="1" max="99" placeholder="80">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">المركز</label>
-                    <select id="editPosition" class="form-input">
-                        <option value="حارس مرمى">حارس مرمى</option>
-                        <option value="قلب دفاع">قلب دفاع</option>
-                        <option value="ظهير أيسر">ظهير أيسر</option>
-                        <option value="ظهير أيمن">ظهير أيمن</option>
-                        <option value="وسط دفاعي">وسط دفاعي</option>
-                        <option value="وسط">وسط</option>
-                        <option value="وسط هجومي">وسط هجومي</option>
-                        <option value="جناح أيسر">جناح أيسر</option>
-                        <option value="جناح أيمن">جناح أيمن</option>
-                        <option value="مهاجم">مهاجم</option>
+                    <label>رقم اللاعب:</label>
+                    <input type="number" id="playerNumberInput" placeholder="مثلاً: 10" min="1" max="99">
+
+                    <label>التقييم (OVR):</label>
+                    <input type="number" id="playerRatingInput" placeholder="مثلاً: 88" min="40" max="99">
+
+                    <label>المركز:</label>
+                    <select id="playerPositionInput">
+                        <option value="GK">حارس مرمى (GK)</option>
+                        <option value="CB">قلب دفاع (CB)</option>
+                        <option value="LB">ظهير أيسر (LB)</option>
+                        <option value="RB">ظهير أيمن (RB)</option>
+                        <option value="CMF">وسط (CMF)</option>
+                        <option value="AMF">وسط هجومي (AMF)</option>
+                        <option value="LWF">جناح أيسر (LWF)</option>
+                        <option value="RWF">جناح أيمن (RWF)</option>
+                        <option value="CF">مهاجم (CF)</option>
                     </select>
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="savePlayerEdit()">💾 حفظ</button>
-                    <button class="btn btn-secondary" onclick="deletePlayer()" style="color: #ff4444;">🗑️ حذف</button>
-                    <button class="btn btn-secondary" onclick="closeEditor()">❌</button>
+                    
+                    <label for="playerImageInput">اختر صورة الصديق:</label>
+                    <input type="file" id="playerImageInput" accept="image/*">
+                    
+                    <button id="savePlayerChangesBtn">حفظ التعديلات</button>
                 </div>
             </div>
-
-            <!-- Add Player -->
-            <button class="btn btn-success" onclick="addNewPlayer()" style="width: 100%; padding: 14px; font-size: 16px;">
-                ➕ إضافة لاعب جديد
-            </button>
         </div>
     </div>
 
-    <!-- Presets -->
-    <div class="presets">
-        <button class="preset-btn" onclick="loadPreset('classic')" style="border-color: #ffd700; color: #ffd700;">🏆 كلاسيكية</button>
-        <button class="preset-btn" onclick="loadPreset('defensive')" style="border-color: #00d9ff; color: #00d9ff;">🛡️ دفاعية</button>
-        <button class="preset-btn" onclick="loadPreset('attacking')" style="border-color: #e94560; color: #e94560;">⚔️ هجومية</button>
-        <button class="preset-btn" onclick="loadPreset('balanced')" style="border-color: #28a745; color: #28a745;">⚖️ متوازنة</button>
-    </div>
+    <!-- قالب بطاقة اللاعب -->
+    <template id="playerCardTemplate">
+        <div class="player-card-container">
+            <div class="player-head-container">
+                <img src="" alt="Player" class="player-head-img">
+            </div>
+            <div class="player-card-stats-area">
+                <div class="player-stats-row">
+                    <span class="player-position-text">CF</span>
+                    <span class="player-number-text">#10</span>
+                    <span class="player-rating-text">88</span>
+                </div>
+                <div class="player-name-text">الاسم</div>
+            </div>
+        </div>
+    </template>
 
-    <script>
-        // Data
-        let players = [
-            { id: 1, name: 'محمود عمار', rating: 86, position: 'حارس مرمى', x: 50, y: 92, jerseyColor: '#1a1a2e', number: 1 },
-            { id: 2, name: 'علي عبيد', rating: 91, position: 'ظهير أيسر', x: 12, y: 72, jerseyColor: '#ffd700', number: 3 },
-            { id: 3, name: 'محمد عمار', rating: 84, position: 'قلب دفاع', x: 88, y: 72, jerseyColor: '#ffd700', number: 4 },
-            { id: 4, name: 'محمد خضير', rating: 90, position: 'قلب دفاع', x: 50, y: 62, jerseyColor: '#ffd700', number: 5 },
-            { id: 5, name: 'منتظر ضاري', rating: 87, position: 'ظهير أيمن', x: 88, y: 42, jerseyColor: '#ffd700', number: 2 },
-            { id: 6, name: 'علي خبيل', rating: 90, position: 'وسط أيسر', x: 12, y: 42, jerseyColor: '#ffd700', number: 8 },
-            { id: 7, name: 'محمد هاشم', rating: 85, position: 'وسط أيمن', x: 50, y: 28, jerseyColor: '#ffd700', number: 10 }
-        ];
-
-        let editMode = false;
-        let selectedPlayerId = null;
-        let globalJerseyColor = '#ffd700';
-        let deferredPrompt = null;
-
-        // PWA Install
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').classList.add('show');
-        });
-
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User installed PWA');
-                    }
-                    deferredPrompt = null;
-                    dismissBanner();
-                });
-            }
-        }
-
-        function dismissBanner() {
-            document.getElementById('installBanner').classList.remove('show');
-        }
-
-        // Check if installed
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            dismissBanner();
-        }
-
-        // Helpers
-        function getRatingColor(rating) {
-            if (rating >= 90) return '#ffd700';
-            if (rating >= 85) return '#00d9ff';
-            if (rating >= 80) return '#28a745';
-            return '#ff6b6b';
-        }
-
-        // Render
-        function renderPlayers() {
-            const container = document.getElementById('playersContainer');
-            container.innerHTML = '';
-
-            players.forEach((player, index) => {
-                const card = document.createElement('div');
-                card.className = 'player-card';
-                card.id = `player-${player.id}`;
-                card.style.left = player.x + '%';
-                card.style.top = player.y + '%';
-
-                const ratingColor = getRatingColor(player.rating);
-
-                card.innerHTML = `
-                    <div class="player-avatar" style="background: ${player.jerseyColor}; color: ${player.jerseyColor === '#ffd700' ? '#1a1a2e' : 'white'};">
-                        ${player.number || index + 1}
-                    </div>
-                    <div class="player-badge" style="border: 2px solid ${ratingColor}40;">
-                        <div class="player-name">${player.name}</div>
-                        <div class="player-rating" style="color: ${ratingColor};">${player.rating}</div>
-                        <div class="player-position">${player.position}</div>
-                    </div>
-                `;
-
-                // Touch events for mobile drag
-                if (editMode) {
-                    let startX, startY, initialLeft, initialTop;
-
-                    card.addEventListener('touchstart', (e) => {
-                        e.preventDefault();
-                        const touch = e.touches[0];
-                        const rect = card.getBoundingClientRect();
-                        const pitchRect = document.getElementById('pitch').getBoundingClientRect();
-                        startX = touch.clientX;
-                        startY = touch.clientY;
-                        initialLeft = player.x;
-                        initialTop = player.y;
-                        card.classList.add('dragging');
-                    }, { passive: false });
-
-                    card.addEventListener('touchmove', (e) => {
-                        e.preventDefault();
-                        const touch = e.touches[0];
-                        const pitchRect = document.getElementById('pitch').getBoundingClientRect();
-
-                        const deltaX = ((touch.clientX - startX) / pitchRect.width) * 100;
-                        const deltaY = ((touch.clientY - startY) / pitchRect.height) * 100;
-
-                        player.x = Math.max(5, Math.min(95, initialLeft + deltaX));
-                        player.y = Math.max(5, Math.min(95, initialTop + deltaY));
-
-                        card.style.left = player.x + '%';
-                        card.style.top = player.y + '%';
-                    }, { passive: false });
-
-                    card.addEventListener('touchend', () => {
-                        card.classList.remove('dragging');
-                    });
-
-                    // Desktop drag
-                    card.draggable = true;
-                    card.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.setData('text/plain', player.id);
-                        card.classList.add('dragging');
-                    });
-
-                    card.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        openEditor(player);
-                    });
-                } else {
-                    card.addEventListener('click', () => openEditor(player));
-                }
-
-                container.appendChild(card);
-            });
-
-            renderPlayerList();
-            updateStats();
-        }
-
-        // Pitch drop for desktop
-        const pitch = document.getElementById('pitch');
-        pitch.addEventListener('dragover', (e) => e.preventDefault());
-        pitch.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (!editMode) return;
-
-            const id = parseInt(e.dataTransfer.getData('text/plain'));
-            const player = players.find(p => p.id === id);
-            if (player) {
-                const rect = pitch.getBoundingClientRect();
-                player.x = Math.max(5, Math.min(95, ((e.clientX - rect.left) / rect.width) * 100));
-                player.y = Math.max(5, Math.min(95, ((e.clientY - rect.top) / rect.height) * 100));
-                renderPlayers();
-            }
-        });
-
-        function renderPlayerList() {
-            const list = document.getElementById('playerList');
-            list.innerHTML = '';
-
-            const sorted = [...players].sort((a, b) => b.rating - a.rating);
-
-            sorted.forEach(player => {
-                const item = document.createElement('div');
-                item.className = 'player-list-item';
-                const ratingColor = getRatingColor(player.rating);
-
-                item.innerHTML = `
-                    <div class="list-avatar" style="background: ${player.jerseyColor}; color: ${player.jerseyColor === '#ffd700' ? '#1a1a2e' : 'white'};">
-                        ${player.number || '-'}
-                    </div>
-                    <div class="list-info">
-                        <div class="list-name">${player.name}</div>
-                        <div class="list-pos">${player.position}</div>
-                    </div>
-                    <div class="list-rating" style="color: ${ratingColor};">${player.rating}</div>
-                `;
-
-                item.addEventListener('click', () => openEditor(player));
-                list.appendChild(item);
-            });
-        }
-
-        function updateStats() {
-            const ratings = players.map(p => p.rating);
-            const avg = (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
-            const max = Math.max(...ratings);
-
-            const defenders = players.filter(p => ['حارس مرمى', 'قلب دفاع', 'ظهير أيسر', 'ظهير أيمن'].includes(p.position));
-            const defAvg = defenders.length > 0 ? (defenders.reduce((sum, p) => sum + p.rating, 0) / defenders.length).toFixed(1) : '-';
-
-            document.getElementById('avgRating').textContent = avg;
-            document.getElementById('bestPlayer').textContent = max;
-            document.getElementById('totalPlayers').textContent = players.length;
-            document.getElementById('defRating').textContent = defAvg;
-        }
-
-        // Formation
-        function changeFormation(formation) {
-            const formations = {
-                '4-2-3-1': [
-                    { x: 50, y: 92 }, { x: 12, y: 72 }, { x: 88, y: 72 },
-                    { x: 50, y: 62 }, { x: 88, y: 42 }, { x: 12, y: 42 }, { x: 50, y: 28 }
-                ],
-                '4-3-3': [
-                    { x: 50, y: 92 }, { x: 12, y: 72 }, { x: 88, y: 72 },
-                    { x: 50, y: 58 }, { x: 25, y: 42 }, { x: 75, y: 42 },
-                    { x: 15, y: 22 }, { x: 50, y: 18 }, { x: 85, y: 22 }
-                ],
-                '4-4-2': [
-                    { x: 50, y: 92 }, { x: 12, y: 72 }, { x: 88, y: 72 },
-                    { x: 38, y: 58 }, { x: 62, y: 58 }, { x: 12, y: 38 },
-                    { x: 88, y: 38 }, { x: 38, y: 20 }, { x: 62, y: 20 }
-                ],
-                '3-5-2': [
-                    { x: 50, y: 92 }, { x: 20, y: 70 }, { x: 50, y: 70 },
-                    { x: 80, y: 70 }, { x: 12, y: 48 }, { x: 50, y: 48 },
-                    { x: 88, y: 48 }, { x: 35, y: 22 }, { x: 65, y: 22 }
-                ],
-                '5-3-2': [
-                    { x: 50, y: 92 }, { x: 10, y: 70 }, { x: 30, y: 70 },
-                    { x: 70, y: 70 }, { x: 90, y: 70 }, { x: 25, y: 48 },
-                    { x: 50, y: 48 }, { x: 75, y: 48 }, { x: 40, y: 22 }, { x: 60, y: 22 }
-                ]
-            };
-
-            const positions = formations[formation];
-            if (positions) {
-                players.forEach((player, index) => {
-                    if (positions[index]) {
-                        player.x = positions[index].x;
-                        player.y = positions[index].y;
-                    }
-                });
-                renderPlayers();
-            }
-        }
-
-        function changeJerseyColor(color) {
-            globalJerseyColor = color;
-            players.forEach(p => {
-                if (p.position !== 'حارس مرمى') p.jerseyColor = color;
-            });
-            renderPlayers();
-        }
-
-        function toggleEditMode() {
-            editMode = !editMode;
-            const btn = document.getElementById('editBtn');
-            btn.textContent = editMode ? '✅ تم' : '✏️ تعديل';
-            btn.className = editMode ? 'btn btn-primary' : 'btn btn-info';
-            renderPlayers();
-        }
-
-        // Editor
-        function openEditor(player) {
-            selectedPlayerId = player.id;
-            document.getElementById('editName').value = player.name;
-            document.getElementById('editRating').value = player.rating;
-            document.getElementById('editPosition').value = player.position;
-            document.getElementById('editPanel').classList.add('active');
-
-            document.querySelectorAll('.player-card').forEach(el => el.style.opacity = '0.5');
-            const selected = document.getElementById(`player-${player.id}`);
-            if (selected) selected.style.opacity = '1';
-        }
-
-        function closeEditor() {
-            document.getElementById('editPanel').classList.remove('active');
-            selectedPlayerId = null;
-            document.querySelectorAll('.player-card').forEach(el => el.style.opacity = '1');
-        }
-
-        function savePlayerEdit() {
-            if (!selectedPlayerId) return;
-            const player = players.find(p => p.id === selectedPlayerId);
-            if (player) {
-                player.name = document.getElementById('editName').value;
-                player.rating = parseInt(document.getElementById('editRating').value) || 80;
-                player.position = document.getElementById('editPosition').value;
-            }
-            renderPlayers();
-            closeEditor();
-        }
-
-        function deletePlayer() {
-            if (selectedPlayerId && players.length > 1) {
-                players = players.filter(p => p.id !== selectedPlayerId);
-                renderPlayers();
-                closeEditor();
-            }
-        }
-
-        function addNewPlayer() {
-            const newId = Math.max(...players.map(p => p.id), 0) + 1;
-            players.push({
-                id: newId,
-                name: 'لاعب جديد',
-                rating: 80,
-                position: 'وسط',
-                x: 50,
-                y: 50,
-                jerseyColor: globalJerseyColor,
-                number: newId
-            });
-            renderPlayers();
-            setTimeout(() => openEditor(players[players.length - 1]), 100);
-        }
-
-        function resetFormation() {
-            players = [
-                { id: 1, name: 'محمود عمار', rating: 86, position: 'حارس مرمى', x: 50, y: 92, jerseyColor: '#1a1a2e', number: 1 },
-                { id: 2, name: 'علي عبيد', rating: 91, position: 'ظهير أيسر', x: 12, y: 72, jerseyColor: '#ffd700', number: 3 },
-                { id: 3, name: 'محمد عمار', rating: 84, position: 'قلب دفاع', x: 88, y: 72, jerseyColor: '#ffd700', number: 4 },
-                { id: 4, name: 'محمد خضير', rating: 90, position: 'قلب دفاع', x: 50, y: 62, jerseyColor: '#ffd700', number: 5 },
-                { id: 5, name: 'منتظر ضاري', rating: 87, position: 'ظهير أيمن', x: 88, y: 42, jerseyColor: '#ffd700', number: 2 },
-                { id: 6, name: 'علي خبيل', rating: 90, position: 'وسط أيسر', x: 12, y: 42, jerseyColor: '#ffd700', number: 8 },
-                { id: 7, name: 'محمد هاشم', rating: 85, position: 'وسط أيمن', x: 50, y: 28, jerseyColor: '#ffd700', number: 10 }
-            ];
-            globalJerseyColor = '#ffd700';
-            document.getElementById('formationSelect').value = '4-2-3-1';
-            renderPlayers();
-        }
-
-        function loadPreset(type) {
-            const presets = {
-                'classic': { formation: '4-2-3-1', color: '#ffd700' },
-                'defensive': { formation: '5-3-2', color: '#00d9ff' },
-                'attacking': { formation: '4-3-3', color: '#e94560' },
-                'balanced': { formation: '4-4-2', color: '#28a745' }
-            };
-
-            const preset = presets[type];
-            if (preset) {
-                document.getElementById('formationSelect').value = preset.formation;
-                changeJerseyColor(preset.color);
-                changeFormation(preset.formation);
-            }
-        }
-
-        // Init
-        renderPlayers();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
