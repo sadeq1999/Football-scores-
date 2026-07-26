@@ -23,12 +23,12 @@
         <button id="resetLineupBtn" style="background:#f44336;">إعادة تعيين</button>
     </div>
 
-    <!-- الملعب الخضراء المخطط طولي المدمج مباشرة بالخلفية -->
+    <!-- الملعب الأخضر المخطط طولي -->
     <div id="pitch">
         <div id="playersContainer"></div>
     </div>
 
-    <!-- قسم تعديل اللاعب -->
+    <!-- قسم تعديل بيانات اللاعب -->
     <div class="sidebar">
         <h3>تعديل بيانات اللاعب المحدد:</h3>
         <div class="edit-box">
@@ -48,7 +48,6 @@
                 <option value="LB">ظهير أيسر (LB)</option>
                 <option value="RB">ظهير أيمن (RB)</option>
                 <option value="CMF">وسط (CMF)</option>
-
                 <option value="AMF">صانع ألعاب (AMF)</option>
                 <option value="RWF">جناح أيمن (RWF)</option>
                 <option value="LWF">جناح أيسر (LWF)</option>
@@ -67,24 +66,17 @@
         <p>معدل تقييم الفريق: <strong id="avgRating">0</strong></p>
     </div>
 
+    <!-- قالب بطاقة اللاعب بأسلوب eFootball / PES -->
     <template id="playerCardTemplate">
         <div class="player-card-container">
             <div class="player-head-container">
                 <img class="player-head-img" src="" alt="Player">
             </div>
             <div class="player-card-stats-area">
-                <span class="player-position-text">RB</span>
-                <span class="player-rating-text">83</span>
+                <span class="player-position-text">CMF</span>
+                <span class="player-rating-text">85</span>
             </div>
-            <div class="player-name-text">K. WALKER</div>
-        </div>
-    </template>
-
-
-    <script src="script.js"></script>
-</body>
-</html>
-</div>
+            <div class="player-name-text">لاعب</div>
         </div>
     </template>
 
