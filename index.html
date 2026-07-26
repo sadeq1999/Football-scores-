@@ -23,36 +23,8 @@
         <button id="resetLineupBtn" style="background:#f44336;">إعادة تعيين</button>
     </div>
 
-    <!-- الملعب الخضراء المخطط بشكل طولي -->
+    <!-- الملعب الخضراء المخطط طولي المدمج مباشرة بالخلفية -->
     <div id="pitch">
-        <!-- تخطيط الملعب الطولي SVG -->
-        <svg class="pitch-lines" viewBox="0 0 100 150" preserveAspectRatio="none">
-            <!-- الحدود الخارجية -->
-            <rect x="2" y="2" width="96" height="146" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <!-- خط المنتصف -->
-            <line x1="2" y1="75" x2="98" y2="75" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <!-- دائرة المنتصف -->
-            <circle cx="50" cy="75" r="15" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <circle cx="50" cy="75" r="1" fill="rgba(255,255,255,0.8)"/>
-
-            <!-- منطقة المرمى العليا -->
-            <rect x="25" y="2" width="50" height="22" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <rect x="35" y="2" width="30" height="8" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <circle cx="50" cy="18" r="0.8" fill="white"/>
-
-            <!-- منطقة المرمى السفلى -->
-            <rect x="25" y="126" width="50" height="22" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <rect x="35" y="140" width="30" height="8" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
-            <circle cx="50" cy="132" r="0.8" fill="white"/>
-
-            <!-- أركان الملعب -->
-            <path d="M 2 7 A 5 5 0 0 0 7 2" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
-            <path d="M 93 2 A 5 5 0 0 0 98 7" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
-            <path d="M 2 143 A 5 5 0 0 0 7 148" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
-            <path d="M 98 143 A 5 5 0 0 0 93 148" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
-        </svg>
-
-        <!-- سيتم توليد بطاقات اللاعبين هنا برمجياً -->
         <div id="playersContainer"></div>
     </div>
 
@@ -76,6 +48,7 @@
                 <option value="LB">ظهير أيسر (LB)</option>
                 <option value="RB">ظهير أيمن (RB)</option>
                 <option value="CMF">وسط (CMF)</option>
+
                 <option value="AMF">صانع ألعاب (AMF)</option>
                 <option value="RWF">جناح أيمن (RWF)</option>
                 <option value="LWF">جناح أيسر (LWF)</option>
@@ -107,6 +80,13 @@
                 </div>
                 <div class="player-name-text">لاعب</div>
             </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
+</div>
         </div>
     </template>
 
