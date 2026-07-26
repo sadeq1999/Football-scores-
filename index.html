@@ -3,99 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منشئ تشكيلات السباعي (7v7)</title>
+    <title>تشكيلة كرة القدم</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Header / العنوان -->
     <div class="header-container">
-        <h1>⚽ منشئ تشكيلات السباعي (7v7)</h1>
-        <p>اسحب أصدقاءك لتغيير مراكزهم - اضغط للتعديل</p>
+        <h2>التشكيلة (7 لاعبين):</h2>
     </div>
 
-    <!-- Controls / أدوات التحكم -->
     <div class="controls-bar">
-        <div>
-            <span>التشكيلة (7 لاعبين):</span>
-            <select id="formationSelect">
-                <option value="2-3-1">2-3-1 (هجومي)</option>
-                <option value="3-2-1">3-2-1 (متوازن)</option>
-                <option value="3-1-2">3-1-2 (هجومي مضاعف)</option>
-                <option value="2-2-2">2-2-2 (كلاسيكي)</option>
+        <select id="formationSelect">
+            <option value="2-3-1">2-3-1 (هجومي)</option>
+            <option value="3-2-1">3-2-1 (دفاعي)</option>
+            <option value="3-1-2">3-1-2 (متوازن)</option>
+            <option value="2-2-2">2-2-2 (مزدوج)</option>
+        </select>
+        <button id="saveLineupBtn" style="background:#2196F3;">💾 حفظ التشكيلة</button>
+        <button id="resetLineupBtn" style="background:#f44336;">إعادة تعيين</button>
+    </div>
+
+    <!-- الملعب الخضراء المخطط بشكل طولي -->
+    <div id="pitch">
+        <!-- تخطيط الملعب الطولي SVG -->
+        <svg class="pitch-lines" viewBox="0 0 100 150" preserveAspectRatio="none">
+            <!-- الحدود الخارجية -->
+            <rect x="2" y="2" width="96" height="146" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <!-- خط المنتصف -->
+            <line x1="2" y1="75" x2="98" y2="75" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <!-- دائرة المنتصف -->
+            <circle cx="50" cy="75" r="15" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <circle cx="50" cy="75" r="1" fill="rgba(255,255,255,0.8)"/>
+
+            <!-- منطقة المرمى العليا -->
+            <rect x="25" y="2" width="50" height="22" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <rect x="35" y="2" width="30" height="8" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <circle cx="50" cy="18" r="0.8" fill="white"/>
+
+            <!-- منطقة المرمى السفلى -->
+            <rect x="25" y="126" width="50" height="22" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <rect x="35" y="140" width="30" height="8" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.2"/>
+            <circle cx="50" cy="132" r="0.8" fill="white"/>
+
+            <!-- أركان الملعب -->
+            <path d="M 2 7 A 5 5 0 0 0 7 2" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+            <path d="M 93 2 A 5 5 0 0 0 98 7" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+            <path d="M 2 143 A 5 5 0 0 0 7 148" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+            <path d="M 98 143 A 5 5 0 0 0 93 148" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+        </svg>
+
+        <!-- سيتم توليد بطاقات اللاعبين هنا برمجياً -->
+        <div id="playersContainer"></div>
+    </div>
+
+    <!-- قسم تعديل اللاعب -->
+    <div class="sidebar">
+        <h3>تعديل بيانات اللاعب المحدد:</h3>
+        <div class="edit-box">
+            <label>الاسم:</label>
+            <input type="text" id="playerNameInput" placeholder="اسم اللاعب">
+
+            <label>الرقم:</label>
+            <input type="number" id="playerNumberInput" placeholder="الرقم">
+
+            <label>التقييم:</label>
+            <input type="number" id="playerRatingInput" placeholder="85">
+
+            <label>المركز:</label>
+            <select id="playerPositionInput">
+                <option value="GK">حارس (GK)</option>
+                <option value="CB">مدافع (CB)</option>
+                <option value="LB">ظهير أيسر (LB)</option>
+                <option value="RB">ظهير أيمن (RB)</option>
+                <option value="CMF">وسط (CMF)</option>
+                <option value="AMF">صانع ألعاب (AMF)</option>
+                <option value="RWF">جناح أيمن (RWF)</option>
+                <option value="LWF">جناح أيسر (LWF)</option>
+                <option value="CF">مهاجم (CF)</option>
             </select>
-        </div>
-        <button id="resetLineupBtn">إعادة تعيين</button>
-    </div>
 
-    <!-- Main Content / المحتوى الرئيسي -->
-    <div class="main-content">
-        <!-- Pitch / الملعب -->
-        <div class="pitch-container">
-            <div id="pitch">
-                <!-- العناصر سيتم إنشاؤها عبر JavaScript -->
-            </div>
-        </div>
+            <label>الصورة الشخصية:</label>
+            <input type="file" id="playerImageInput" accept="image/*">
 
-        <!-- Sidebar / القائمة الجانبية -->
-        <div class="sidebar">
-            <!-- Stats / الإحصائيات -->
-            <div class="stats-box">
-                <h3>📊 إحصائيات الفريق</h3>
-                <div class="stat-item">
-                    <span id="avgRating">0</span>
-                    <span>متوسط التقييم</span>
-                </div>
-            </div>
-
-            <!-- Edit Player / تعديل بيانات الصديق -->
-            <div class="edit-box">
-                <h3>✏️ تعديل بيانات الصديق</h3>
-                <div id="editArea">
-                    <label>اسم الصديق:</label>
-                    <input type="text" id="playerNameInput" placeholder="مثلاً: علي عبيد">
-
-                    <label>رقم اللاعب:</label>
-                    <input type="number" id="playerNumberInput" placeholder="مثلاً: 10" min="1" max="99">
-
-                    <label>التقييم (OVR):</label>
-                    <input type="number" id="playerRatingInput" placeholder="مثلاً: 88" min="40" max="99">
-
-                    <label>المركز:</label>
-                    <select id="playerPositionInput">
-                        <option value="GK">حارس مرمى (GK)</option>
-                        <option value="CB">قلب دفاع (CB)</option>
-                        <option value="LB">ظهير أيسر (LB)</option>
-                        <option value="RB">ظهير أيمن (RB)</option>
-                        <option value="CMF">وسط (CMF)</option>
-                        <option value="AMF">وسط هجومي (AMF)</option>
-                        <option value="LWF">جناح أيسر (LWF)</option>
-                        <option value="RWF">جناح أيمن (RWF)</option>
-                        <option value="CF">مهاجم (CF)</option>
-                    </select>
-                    
-                    <label for="playerImageInput">اختر صورة الصديق:</label>
-                    <input type="file" id="playerImageInput" accept="image/*">
-                    
-                    <button id="savePlayerChangesBtn">حفظ التعديلات</button>
-                </div>
-            </div>
+            <button id="savePlayerChangesBtn">تحديث بيانات اللاعب</button>
         </div>
     </div>
 
-    <!-- قالب بطاقة اللاعب -->
+    <div class="sidebar" style="margin-top: 15px;">
+        <h3>📊 إحصائيات الفريق</h3>
+        <p>معدل تقييم الفريق: <strong id="avgRating">0</strong></p>
+    </div>
+
     <template id="playerCardTemplate">
         <div class="player-card-container">
             <div class="player-head-container">
-                <img src="" alt="Player" class="player-head-img">
+                <img class="player-head-img" src="" alt="Player">
             </div>
             <div class="player-card-stats-area">
                 <div class="player-stats-row">
-                    <span class="player-position-text">CF</span>
-                    <span class="player-number-text">#10</span>
-                    <span class="player-rating-text">88</span>
+                    <span class="player-rating-text">85</span>
+                    <span class="player-number-text">#1</span>
+                    <span class="player-position-text">CMF</span>
                 </div>
-                <div class="player-name-text">الاسم</div>
+                <div class="player-name-text">لاعب</div>
             </div>
         </div>
     </template>
