@@ -1,4 +1,5 @@
 const pitch = document.getElementById('pitch');
+const playersContainer = document.getElementById('playersContainer');
 const MAX_PLAYERS = 7;
 
 let playersList = [];
@@ -7,10 +8,10 @@ let selectedPlayerCard = null;
 
 const formations = {
     "2-3-1": [
-        { top: 85, left: 50 }, // GK
-        { top: 70, left: 30 }, { top: 70, left: 70 }, // DF
-        { top: 45, left: 25 }, { top: 45, left: 50 }, { top: 45, left: 75 }, // MF
-        { top: 20, left: 50 } // FW
+        { top: 85, left: 50 },
+        { top: 70, left: 30 }, { top: 70, left: 70 },
+        { top: 45, left: 25 }, { top: 45, left: 50 }, { top: 45, left: 75 },
+        { top: 20, left: 50 }
     ],
     "3-2-1": [
         { top: 85, left: 50 },
@@ -31,6 +32,32 @@ const formations = {
         { top: 20, left: 30 }, { top: 20, left: 70 }
     ]
 };
+
+// تحميل التشكيلة المحفوظة إن وجدت
+function loadSavedLineup() {
+    const savedData = localStorage.getItem('football_lineup_data');
+    if (savedData) {
+        try {
+            const parsed = JSON.parse(savedData);
+            playersList = parsed.playersList || [];
+            if (parsed.formation) {
+                document.getElementById('formationSelect').value = parsed.formation;
+            }
+        } catch (e) {
+            console.error("Error loading lineup:", e);
+        }
+    }
+}
+
+// حفظ التشكيلة الحالية
+function saveLineupToStorage() {
+    const formation = document.getElementById('formationSelect').value;
+    const dataToSave = {
+        formation: formation,
+        playersList: playersList
+    };
+    localStorage.setItem('football_lineup_data', JSON.stringify(dataToSave));
+}
 
 function createPlayerCardElement(playerData) {
     const template = document.getElementById('playerCardTemplate').content.cloneNode(true);
@@ -81,6 +108,7 @@ function addDraggableBehavior(element) {
         if (isDragging) {
             isDragging = false;
             element.style.zIndex = '10';
+            saveLineupToStorage();
         }
     };
 
@@ -135,16 +163,18 @@ function savePlayerChanges() {
         reader.onload = function(e) {
             playersList[playerIndex].imageUrl = e.target.result;
             renderLineup();
+            saveLineupToStorage();
             imageInput.value = "";
         };
         reader.readAsDataURL(imageInput.files[0]);
     } else {
         renderLineup();
+        saveLineupToStorage();
     }
 }
 
 function renderLineup() {
-    pitch.innerHTML = "";
+    playersContainer.innerHTML = "";
     const selectedFormation = document.getElementById('formationSelect').value;
     const positions = formations[selectedFormation];
 
@@ -168,7 +198,7 @@ function renderLineup() {
         playerCard.style.left = `${pos.left}%`;
         playerCard.style.transform = `translate(-50%, -50%)`;
         
-        pitch.appendChild(playerCard);
+        playersContainer.appendChild(playerCard);
     });
 
     updateStats();
@@ -179,12 +209,27 @@ function updateStats() {
     document.getElementById('avgRating').textContent = avgRating.toFixed(1);
 }
 
-document.getElementById('formationSelect').addEventListener('change', renderLineup);
-document.getElementById('savePlayerChangesBtn').addEventListener('click', savePlayerChanges);
-document.getElementById('resetLineupBtn').addEventListener('click', () => {
-    playersList = [];
-    nextPlayerId = 1;
+document.getElementById('formationSelect').addEventListener('change', () => {
     renderLineup();
+    saveLineupToStorage();
 });
 
+document.getElementById('savePlayerChangesBtn').addEventListener('click', savePlayerChanges);
+
+document.getElementById('saveLineupBtn').addEventListener('click', () => {
+    saveLineupToStorage();
+    alert("تم حفظ التشكيلة بنجاح! ستسجل تغيراتك حتى عند إغلاق الصفحة.");
+});
+
+document.getElementById('resetLineupBtn').addEventListener('click', () => {
+    if (confirm("هل أنت تأكد من إعادة التشكيلة للوضع الافتراضي؟")) {
+        localStorage.removeItem('football_lineup_data');
+        playersList = [];
+        nextPlayerId = 1;
+        renderLineup();
+    }
+});
+
+// التشغيل الابتدائي
+loadSavedLineup();
 renderLineup();
