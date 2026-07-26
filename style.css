@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #121212;
     color: white;
     margin: 0;
@@ -9,12 +9,12 @@ body {
 
 .header-container {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .controls-bar {
     display: flex;
-    justify-content: space-between;
+    gap: 8px;
     align-items: center;
     background: #1e1e1e;
     padding: 10px;
@@ -28,91 +28,132 @@ select, input, button {
     border: 1px solid #444;
     background: #2a2a2a;
     color: white;
-    margin-top: 5px;
     width: 100%;
     box-sizing: border-box;
 }
 
 button {
-    background: #4CAF50;
-    font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
+    font-weight: bold;
+    border: none;
 }
 
 button:hover {
-    background: #45a049;
+    opacity: 0.9;
 }
 
-.main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
+/* خلفية الملعب الخضراء مع تخطيط طولي أبيض نقي */
 #pitch {
-    #pitch {
     position: relative;
     width: 100%;
     height: 560px;
     border: 3px solid #ffffff;
     border-radius: 12px;
-    /* خلفية تجمع بين اللون الأخضر وصورة التخطيط الطولي الشفاف */
     background-color: #1b5e20;
     background-image: 
-        radial-gradient(circle, rgba(46,125,50,0.8) 0%, rgba(27,94,32,0.95) 100%),
+        radial-gradient(circle, rgba(46,125,50,0.85) 0%, rgba(27,94,32,0.98) 100%),
         url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 150"><rect x="2" y="2" width="96" height="146" fill="none" stroke="white" stroke-width="1.5"/><line x1="2" y1="75" x2="98" y2="75" stroke="white" stroke-width="1.5"/><circle cx="50" cy="75" r="18" fill="none" stroke="white" stroke-width="1.5"/><circle cx="50" cy="75" r="1.5" fill="white"/><rect x="20" y="2" width="60" height="25" fill="none" stroke="white" stroke-width="1.5"/><rect x="35" y="2" width="30" height="10" fill="none" stroke="white" stroke-width="1.5"/><circle cx="50" cy="18" r="1" fill="white"/><rect x="20" y="123" width="60" height="25" fill="none" stroke="white" stroke-width="1.5"/><rect x="35" y="138" width="30" height="10" fill="none" stroke="white" stroke-width="1.5"/><circle cx="50" cy="132" r="1" fill="white"/><path d="M 2 8 A 6 6 0 0 0 8 2" fill="none" stroke="white" stroke-width="1.5"/><path d="M 92 2 A 6 6 0 0 0 98 8" fill="none" stroke="white" stroke-width="1.5"/><path d="M 2 142 A 6 6 0 0 0 8 148" fill="none" stroke="white" stroke-width="1.5"/><path d="M 98 142 A 6 6 0 0 0 92 148" fill="none" stroke="white" stroke-width="1.5"/></svg>');
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
     touch-action: none;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
 }
 
-
-.player-card-stats-area {
+#playersContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 55px;
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(4px);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: 100%;
+}
+
+/* بطاقة اللاعب نمط eFootball */
+.player-card-container {
+    position: absolute;
+    width: 80px;
+    height: 105px;
+    cursor: move;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 3px;
-    text-align: center;
-    z-index: 1;
-}
-
-.player-stats-row {
-    display: flex;
-    justify-content: space-around;
     align-items: center;
-    font-size: 12px;
-    font-weight: bold;
+    justify-content: flex-end;
+    transition: transform 0.15s ease;
+    z-index: 10;
 }
 
-.player-number-text {
-    color: #e0e0e0;
-    font-size: 10px;
+.player-card-container.active {
+    outline: 2px solid #ffeb3b;
+    border-radius: 6px;
+    filter: drop-shadow(0px 0px 8px #ffeb3b);
+}
+
+.player-head-container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-head-img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.7));
+}
+
+.player-card-stats-area {
+    width: 68px;
+    height: 22px;
+    background-color: #111111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.8);
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .player-position-text {
-    color: #ff9800;
+    width: 45%;
+    height: 100%;
+    background-color: #00bcd4;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
 }
 
 .player-rating-text {
-    color: #4caf50;
+    width: 55%;
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 12px;
+    text-align: center;
 }
 
 .player-name-text {
+    color: #ffffff;
     font-size: 11px;
     font-weight: bold;
+    text-shadow: 1px 1px 3px #000, -1px -1px 3px #000;
+    margin-top: 3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 80px;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 2;
 }
 
 .sidebar {
